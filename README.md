@@ -319,3 +319,44 @@ The demonstration must show actual decision records and business-state changes, 
 - OWASP Top 10 for LLM Applications 2025 — including Prompt Injection and Excessive Agency.
 - OWASP Top 10 for Agentic Applications 2026.
 - Zhan et al. (2024), *InjecAgent: Benchmarking Indirect Prompt Injections in Tool-Integrated LLM Agents*. The project scenarios are inspired by this class of attack and are not a reproduction of the benchmark.
+
+---
+
+## 15. NovaPay ERP Application
+
+A full-stack business ERP system containing a FastAPI backend and Next.js frontend, integrated with ActionGate for secure policy evaluation on business mutations.
+
+### Structure
+
+```
+CODE_APEX/
+├── actiongate/             # ActionGate authorization engine & API
+├── actiongate-attacks/     # Security test harness & mutation tests
+├── backend/                # FastAPI application (Employees, Leaves, Expenses, Auth)
+│   ├── main.py             # FastAPI entry point
+│   ├── core/               # Database, auth, config
+│   ├── models/             # SQLAlchemy ORM models
+│   ├── routers/            # Auth, employee, leave, dashboard
+│   ├── services/           # ActionGate policy hook
+│   └── requirements.txt    # Python dependencies
+├── frontend/               # Next.js 16 frontend (TypeScript + Tailwind CSS)
+└── docker-compose.yml      # PostgreSQL 15 service (optional, SQLite supported)
+```
+
+### Quick Start
+
+1. **Database & Backend**:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   python seed.py
+   python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+2. **Frontend**:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   Open **http://localhost:3000** in your browser.
