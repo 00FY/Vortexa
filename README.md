@@ -23,6 +23,32 @@ novapay-erp/
 
 ## Setup
 
+### Run locally (quick start)
+
+1. **Database** – start PostgreSQL (or use SQLite):
+   ```bash
+   docker compose up -d
+   ```
+2. **Backend** – install & launch:
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --host 127.0.0.1 --port 8000
+   ```
+   (If you prefer the existing `main.py` entry point, use `uvicorn main:app ...`.)
+3. **Frontend** – install & launch:
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev
+   ```
+   Open **http://localhost:3000** in a browser.
+
+These three commands reproduce the exact environment you’ve been using.
+
+
 ### 1. Database (Docker)
 
 Start the PostgreSQL service:
@@ -62,3 +88,8 @@ The frontend runs on `http://localhost:3000`.
 - No business logic has been written yet — this is a scaffold only.
 - The backend's `DATABASE_URL` points at the docker-compose PostgreSQL service.
 - Copy `.env.example` to `.env` and fill in your own `JWT_SECRET_KEY` before running.
+
+---
+
+## CI (GitHub Actions)
+A minimal CI workflow is added at `.github/workflows/ci.yml` which installs Python and Node dependencies and verifies that the project builds without errors.
