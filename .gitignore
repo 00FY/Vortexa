@@ -47,3 +47,14 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Frontend
+node_modules/
+.next/
+out/
+next-env.d.ts
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
