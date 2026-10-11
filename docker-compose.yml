@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # ── PostgreSQL Database ──────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: actiongate-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vortexa_erp
+      POSTGRES_USER: vortexa
+      POSTGRES_PASSWORD: vortexa_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vortexa -d vortexa_erp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - actiongate-net
+
+  # ── ActionGate Authorization Engine ──────────────────────────────────────────
+  actiongate:
+    build:
+      context: .
+      dockerfile: actiongate/Dockerfile
+    container_name: actiongate-engine
+    restart: unless-stopped
+    command: uvicorn actiongate.main:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+    environment:
+      - ENV=development
+      - DATABASE_URL=postgresql://vortexa:vortexa_dev_password@postgres:5432/vortexa_erp
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - actiongate-net
+
+  # ── AI Agent Orchestration Layer (LangGraph) ─────────────────────────────────
+  agents:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    container_name: actiongate-orchestrator
+    restart: unless-stopped
+    command: uvicorn agents.main:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+    environment:
+      - ENV=development
+      - ACTIONGATE_BASE_URL=http://actiongate:8001
+      - ERP_BASE_URL=http://backend:8000
+      - LLM_PROVIDER=mock
+    depends_on:
+      - actiongate
+    networks:
+      - actiongate-net
+
+networks:
+  actiongate-net:
+    driver: bridge
+
+volumes:
+  pgdata:

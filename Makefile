@@ -1,18 +1,24 @@
-.PHONY: test attacks attack-lab demo run lint clean
+.PHONY: test demo seed reset run run-gate run-agents lint clean
 
 test:
-	python -m pytest agents/tests attacks/tests/test_attack_lab.py -v --tb=short
-
-attacks:
-	python attacks/runner/run_attacks.py
-
-attack-lab:
-	python -m webbrowser "file://$(CURDIR)/attacks/lab-ui/index.html"
+	python -m pytest agents/tests -v --tb=short --ignore=agents/tests/test_live_openai_smoke.py
 
 demo:
 	python scripts/demo.py
 
+seed:
+	python scripts/seed.py
+
+reset:
+	python scripts/reset.py
+
 run:
+	python -m uvicorn agents.main:app --host 0.0.0.0 --port 8002 --reload
+
+run-gate:
+	python -m uvicorn actiongate.main:app --host 0.0.0.0 --port 8001 --reload
+
+run-agents:
 	python -m uvicorn agents.main:app --host 0.0.0.0 --port 8002 --reload
 
 clean:

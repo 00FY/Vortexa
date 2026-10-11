@@ -1,0 +1,43 @@
+name: ActionGate CI Pipeline
+
+on:
+  push:
+    branches: [ main, master, feature/** ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-orchestration:
+    name: Test AI Orchestration & Security Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+          pip install pytest pytest-asyncio pydantic pydantic-settings httpx fastapi uvicorn langgraph langchain-core langchain-openai
+
+      - name: Run Orchestrator & E2E Security Tests
+        env:
+          ENV: test
+          LLM_PROVIDER: mock
+          USE_MOCKS: "true"
+        run: |
+          python -m pytest agents/tests -v --tb=short --ignore=agents/tests/test_live_openai_smoke.py
+
+      - name: Run Demo Walkthrough Verification
+        env:
+          ENV: test
+          USE_MOCKS: "true"
+        run: |
+          python scripts/demo.py
