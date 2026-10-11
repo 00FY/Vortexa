@@ -1,4 +1,5 @@
 import uuid
+import logging
 from typing import Dict, Any, Optional
 from agents.graph.state import ChatState
 from agents.schemas.erp import ERPUserContext, ERPExecutionResponse
@@ -9,12 +10,18 @@ from agents.schemas.actions import (
 )
 from agents.provenance.fingerprint import calculate_action_fingerprint
 from agents.schemas.actiongate import ActionGateRequest, DecisionType
-from agents.router.intent_router import route_request
+from agents.classifier.intent_guard import scan_prompt_injection
+from agents.llm.provider import LLMProvider, LLMUnavailableError
 from agents.specialists.hr_agent import HRAgent
 from agents.specialists.leave_agent import LeaveAgent
 from agents.specialists.finance_agent import FinanceAgent
 from agents.gate_client.actiongate_client import ActionGateClient
 from agents.gate_client.erp_client import ERPClient
+
+logger = logging.getLogger(__name__)
+
+# Module-level singleton — replaceable in tests to simulate LLM outages
+llm_provider: LLMProvider = LLMProvider()
 
 hr_agent = HRAgent()
 leave_agent = LeaveAgent()
@@ -42,17 +49,36 @@ def classify_intent_and_route(state: ChatState) -> Dict[str, Any]:
         return {}
 
     msg = state.get("user_message", "").strip()
-    route_meta = route_request(msg)
 
-    if route_meta["is_blocked"]:
+    # Step 1: Deterministic injection scan — always runs, no LLM required
+    injection_err = scan_prompt_injection(msg)
+    if injection_err:
         return {
-            "intent": route_meta["intent"],
-            "validation_error": route_meta["error"],
+            "intent": "MALICIOUS_INPUT",
+            "validation_error": injection_err,
             "status": "BLOCKED",
-            "final_response": route_meta["refusal_message"]
+            "final_response": (
+                "Security Notice: Instructions attempting to override system authorization "
+                "policies or execute arbitrary commands are strictly blocked."
+            ),
         }
 
-    return {"intent": route_meta["intent"]}
+    # Step 2: Intent classification via LLM (OpenAI) or deterministic regex (mock)
+    try:
+        intent = llm_provider.classify_intent(msg)
+    except LLMUnavailableError as exc:
+        logger.warning("LLM unavailable during intent classification: %s", exc)
+        return {
+            "validation_error": str(exc),
+            "status": "ERROR",
+            "final_response": (
+                "The AI assistant is temporarily unavailable due to an LLM provider outage. "
+                "No protected operations have been performed. "
+                "Please try again later or contact support."
+            ),
+        }
+
+    return {"intent": intent}
 
 def invoke_specialized_agent(state: ChatState) -> Dict[str, Any]:
     if state.get("validation_error") or state.get("final_response"):
@@ -63,28 +89,48 @@ def invoke_specialized_agent(state: ChatState) -> Dict[str, Any]:
     user_context = state.get("user_context")
     conv_context = state.get("conversation_context", {})
 
-    if intent == "LEAVE":
-        action, clarification, missing = leave_agent.process(user_msg, user_context, conv_context)
-    elif intent == "FINANCE":
-        action, clarification, missing = finance_agent.process(user_msg, user_context, conv_context)
-    elif intent == "HR":
-        action, clarification, missing = hr_agent.process(user_msg, user_context, conv_context)
-    else:
+    try:
+        if intent == "LEAVE":
+            action, clarification, missing = leave_agent.process(
+                user_msg, user_context, conv_context, llm_provider
+            )
+        elif intent == "FINANCE":
+            action, clarification, missing = finance_agent.process(
+                user_msg, user_context, conv_context, llm_provider
+            )
+        elif intent == "HR":
+            action, clarification, missing = hr_agent.process(
+                user_msg, user_context, conv_context, llm_provider
+            )
+        else:
+            return {
+                "status": "NEEDS_CLARIFICATION",
+                "clarification_message": (
+                    "I can assist you with HR profile/directory lookup, "
+                    "Leave applications, and Expense management. "
+                    "Please specify your request."
+                ),
+            }
+    except LLMUnavailableError as exc:
+        logger.warning("LLM unavailable during agent field extraction: %s", exc)
         return {
-            "status": "NEEDS_CLARIFICATION",
-            "clarification_message": "I can assist you with HR profile/directory lookup, Leave applications, and Expense management. Please specify your request."
+            "validation_error": str(exc),
+            "status": "ERROR",
+            "final_response": (
+                "The AI assistant is temporarily unavailable due to an LLM provider outage. "
+                "No protected operations have been performed. "
+                "Please try again later."
+            ),
         }
 
     if clarification:
         return {
             "clarification_message": clarification,
             "missing_fields": missing,
-            "status": "NEEDS_CLARIFICATION"
+            "status": "NEEDS_CLARIFICATION",
         }
 
-    return {
-        "proposed_action": action,
-    }
+    return {"proposed_action": action}
 
 def validate_action_allowlist(state: ChatState) -> Dict[str, Any]:
     if state.get("validation_error") or state.get("clarification_message"):
