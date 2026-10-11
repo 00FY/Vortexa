@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: novapay-erp-backend
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt && python backend/seed.py"
+    startCommand: "python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  - type: web
+    name: novapay-erp-frontend
+    env: node
+    buildCommand: "cd frontend && npm install --legacy-peer-deps && npm run build"
+    startCommand: "cd frontend && npm start"
+    envVars:
+      - key: NODE_VERSION
+        value: 20.0.0
