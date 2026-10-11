@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from agents.api.routes import router
+from attacks.api import router as attacks_router
 
 app = FastAPI(
-    title="ActionGate AI Agent Orchestrator",
+    title="ActionGate AI Agent Orchestrator & Attack Lab",
     description="LangGraph AI agent orchestration backend connecting Mini ERP Chatbot to ActionGate",
     version="1.0.0",
 )
@@ -17,6 +18,7 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api")
+app.include_router(attacks_router, prefix="/api")
 
 if __name__ == "__main__":
     import uvicorn

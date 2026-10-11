@@ -74,7 +74,7 @@ class FinanceAgent:
         # ---------------------------------------------------------------
         # Operation 1: Approve Expense Claim  (protected)
         # ---------------------------------------------------------------
-        if "approve" in msg_lower and any(
+        if any(w in msg_lower for w in ["approve", "approval"]) and any(
             kw in msg_lower for kw in ["expense", "claim", "exp-"]
         ):
             exp_match = re.search(r"(EXP-\d+)", msg, re.IGNORECASE)
