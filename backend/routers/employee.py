@@ -10,13 +10,15 @@ Endpoints:
 * POST /{employee_id}/toggle_status – toggle active flag (admin only)
 """
 
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from core.dependencies import get_current_user, require_role
 from core.database import get_db
 from core.security import hash_password
-from models import Employee, User, ActivityLog, ActorType, PolicyCheckPath, policy_check
+from models import Employee, User, ActivityLog, ActorType, PolicyCheckPath
+from services.policy_hook import policy_check
 from schemas.employee import EmployeeCreate, EmployeeUpdate, EmployeeResponse
 
 router = APIRouter()

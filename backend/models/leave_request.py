@@ -13,17 +13,18 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
+import enum
 from core.database import Base
 
 
-class LeaveType(str):
+class LeaveType(str, enum.Enum):
     CASUAL = "casual"
     SICK = "sick"
     ANNUAL = "annual"
     UNPAID = "unpaid"
 
 
-class LeaveStatus(str):
+class LeaveStatus(str, enum.Enum):
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
@@ -31,19 +32,13 @@ class LeaveStatus(str):
 
 
 leave_type_enum = Enum(
-    LeaveType.CASUAL,
-    LeaveType.SICK,
-    LeaveType.ANNUAL,
-    LeaveType.UNPAID,
+    LeaveType,
     name="leave_type",
     native_enum=True,
 )
 
 leave_status_enum = Enum(
-    LeaveStatus.PENDING,
-    LeaveStatus.APPROVED,
-    LeaveStatus.REJECTED,
-    LeaveStatus.CANCELLED,
+    LeaveStatus,
     name="leave_status",
     native_enum=True,
 )

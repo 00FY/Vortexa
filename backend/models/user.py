@@ -1,3 +1,4 @@
+import enum
 import uuid
 from datetime import datetime, timezone
 
@@ -7,16 +8,14 @@ from sqlalchemy.dialects.postgresql import UUID
 from core.database import Base
 
 
-class UserRole(str):
+class UserRole(str, enum.Enum):
     EMPLOYEE = "employee"
     MANAGER = "manager"
     ADMIN = "admin"
 
 
 user_role_enum = Enum(
-    UserRole.EMPLOYEE,
-    UserRole.MANAGER,
-    UserRole.ADMIN,
+    UserRole,
     name="user_role",
     native_enum=True,
 )

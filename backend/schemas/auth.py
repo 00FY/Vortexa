@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, Union
 from uuid import UUID
 
 
@@ -9,10 +9,11 @@ class LoginRequest(BaseModel):
 
 
 class UserProfileResponse(BaseModel):
-    id: UUID
+    id: Union[UUID, str]
     email: EmailStr
     role: str
     is_active: bool
 
     class Config:
+        from_attributes = True
         orm_mode = True

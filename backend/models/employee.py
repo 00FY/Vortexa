@@ -12,12 +12,13 @@ from sqlalchemy import (
     String,
 )
 from sqlalchemy.dialects.postgresql import UUID
+import enum
 from sqlalchemy.orm import relationship
 
 from core.database import Base
 
 
-class Department(str):
+class Department(str, enum.Enum):
     ENGINEERING = "Engineering"
     FINANCE = "Finance"
     RISK_COMPLIANCE = "Risk_Compliance"
@@ -26,11 +27,7 @@ class Department(str):
 
 
 department_enum = Enum(
-    Department.ENGINEERING,
-    Department.FINANCE,
-    Department.RISK_COMPLIANCE,
-    Department.OPERATIONS,
-    Department.HR,
+    Department,
     name="department",
     native_enum=True,
 )

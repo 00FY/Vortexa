@@ -13,30 +13,29 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
+import enum
 from core.database import Base
 
 
-class ActorType(str):
+class ActorType(str, enum.Enum):
     SYSTEM = "system"
     USER = "user"
 
 
 actor_type_enum = Enum(
-    ActorType.SYSTEM,
-    ActorType.USER,
+    ActorType,
     name="actor_type",
     native_enum=True,
 )
 
 
-class PolicyCheckPath(str):
+class PolicyCheckPath(str, enum.Enum):
     RULES_ONLY = "RULES_ONLY"
     AI_ASSISTED = "AI_ASSISTED"
 
 
 policy_check_path_enum = Enum(
-    PolicyCheckPath.RULES_ONLY,
-    PolicyCheckPath.AI_ASSISTED,
+    PolicyCheckPath,
     name="policy_check_path",
     native_enum=True,
 )

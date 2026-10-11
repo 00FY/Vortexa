@@ -14,10 +14,11 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
+import enum
 from core.database import Base
 
 
-class ExpenseCategory(str):
+class ExpenseCategory(str, enum.Enum):
     TRAVEL = "travel"
     FOOD = "food"
     EQUIPMENT = "equipment"
@@ -25,7 +26,7 @@ class ExpenseCategory(str):
     OTHER = "other"
 
 
-class ExpenseStatus(str):
+class ExpenseStatus(str, enum.Enum):
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
@@ -33,20 +34,13 @@ class ExpenseStatus(str):
 
 
 expense_category_enum = Enum(
-    ExpenseCategory.TRAVEL,
-    ExpenseCategory.FOOD,
-    ExpenseCategory.EQUIPMENT,
-    ExpenseCategory.ACCOMMODATION,
-    ExpenseCategory.OTHER,
+    ExpenseCategory,
     name="expense_category",
     native_enum=True,
 )
 
 expense_status_enum = Enum(
-    ExpenseStatus.PENDING,
-    ExpenseStatus.APPROVED,
-    ExpenseStatus.REJECTED,
-    ExpenseStatus.PAID,
+    ExpenseStatus,
     name="expense_status",
     native_enum=True,
 )

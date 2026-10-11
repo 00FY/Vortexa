@@ -3,10 +3,13 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from core.config import settings
 
+connect_args = {"check_same_thread": False} if "sqlite" in settings.database_url else {}
+
 engine = create_engine(
     settings.database_url,
     future=True,
     echo=False,
+    connect_args=connect_args,
 )
 
 SessionLocal = sessionmaker(
