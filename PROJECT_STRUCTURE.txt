@@ -1,0 +1,36 @@
+# Target GitHub Monorepo Structure & Our Contribution
+# ==============================================================================
+# The target repository structure:
+# actiongate/
+# ├── README.md                 # Monorepo architecture & setup guide
+# ├── .gitignore                # Global gitignore
+# ├── .env.example              # Consolidated environment configuration
+# ├── docker-compose.yml        # PostgreSQL (and app services)
+# ├── Makefile                  # Developer workflow targets (test, demo, run)
+# ├── .github/workflows/ci.yml
+# ├── docs/                     # architecture, threat-model, test-provenance, api-contract, demo-script
+# │   ├── api-contract.md
+# │   ├── threat-model.md
+# │   ├── test-provenance.md
+# │   └── demo-script.md
+# ├── frontend/                 # Next.js + React + Tailwind (ERP teammate)
+# ├── backend/                  # FastAPI ERP services (ERP teammate)
+# │   └── app/{api,services,models,db,core,execution}
+# ├── agents/                   # Our AI Orchestration Layer (LangGraph)
+# │   ├── api/                  # FastAPI orchestrator chat & health endpoints
+# │   ├── classifier/           # Ingress prompt injection filter & intent classifier
+# │   ├── router/               # Route evaluation and safety dispatcher
+# │   ├── specialists/          # HR, Leave, and Finance specialized agents
+# │   ├── gate_client/          # ActionGate & ERP clients + high-fidelity test mocks
+# │   ├── provenance/           # Canonical SHA-256 action fingerprinting
+# │   ├── llm/                  # Configurable LLM provider adapter (OpenAI, Groq, Mock)
+# │   ├── schemas/              # Pydantic models for actions, ActionGate, and ERP
+# │   ├── graph/                # LangGraph StateGraph, nodes, and compiled workflow
+# │   ├── tests/                # 22 automated unit, integration, and security tests
+# │   ├── config.py             # Settings via pydantic-settings
+# │   └── main.py               # FastAPI ASGI entrypoint
+# ├── actiongate/               # The gateway: policy, risk, approvals, audit (Gate developer)
+# ├── integrations/             # email_sim, screening, ivr, voice, notifications
+# ├── attacks/                  # Security tests, mutations, runner, lab-ui
+# └── scripts/                  # seed, reset, demo
+#     └── demo.py               # End-to-end interactive CLI demonstration runner
