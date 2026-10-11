@@ -1,5 +1,6 @@
-'''backend/schemas/leave.py
-'''Schemas for Leave endpoints.
+"""backend/schemas/leave.py
+Schemas for Leave endpoints.
+"""
 
 from datetime import date
 from typing import Optional

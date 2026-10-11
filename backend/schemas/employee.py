@@ -1,5 +1,6 @@
-'''backend/schemas/employee.py
-'''Schemas for Employee endpoints.
+"""backend/schemas/employee.py
+Schemas for Employee endpoints.
+"""
 
 from datetime import date
 from typing import Optional
