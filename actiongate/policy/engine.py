@@ -164,8 +164,9 @@ class PolicyEngine:
             # Check if out-of-band approval was already registered for exact fingerprint
             if approval_registry and request.action_fingerprint in approval_registry:
                 submission = approval_registry[request.action_fingerprint]
-                if submission.get("status") == "APPROVED":
-                    approver = submission.get("approver_id", "AUTHORIZED_APPROVER")
+                sub_status = getattr(submission, "status", None) or (submission.get("status") if isinstance(submission, dict) else None)
+                if sub_status == "APPROVED":
+                    approver = getattr(submission, "approver_id", None) or (submission.get("approver_id") if isinstance(submission, dict) else "AUTHORIZED_APPROVER")
                     return ActionGateDecision(
                         decision_id=decision_id,
                         request_id=request.request_id,
@@ -175,6 +176,7 @@ class PolicyEngine:
                         reasons=[f"Verified exact-action approval from authorized manager {approver}."],
                         action_fingerprint=request.action_fingerprint,
                     )
+
 
             # Requires human out-of-band sign-off
             hold = HoldDetails(
