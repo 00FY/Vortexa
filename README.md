@@ -53,7 +53,8 @@ These are design objectives that must be verified against the implementation and
 
 ## 3. System Architecture
 
-![ActionGate System Architecture](docs/architecture.png)
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/3f9e87c8-3602-4dc4-94d2-e540adec16a7" />
+
 
 The system consists of the following layers:
 
