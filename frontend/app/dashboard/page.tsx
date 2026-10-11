@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useTransition } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SplineScene from '../components/SplineScene';
@@ -23,10 +23,13 @@ import {
   Lock,
   Terminal,
   Zap,
-  UserCheck,
   Layers,
   ArrowUpRight,
   TrendingUp,
+  Cpu,
+  Binary,
+  Radio,
+  FileText,
 } from 'lucide-react';
 
 interface Stats {
@@ -121,7 +124,7 @@ export default function DashboardPage() {
       end_date: '2026-11-02',
       days: 2,
       status: 'APPROVED',
-      reason: 'Attending tech conference',
+      reason: 'Attending security conference',
     },
   ]);
 
@@ -206,7 +209,6 @@ export default function DashboardPage() {
       return;
     }
 
-    // Try decoding role or default to ADMIN if admin email
     if (email?.includes('admin')) setUserRole('ADMIN');
     else if (email?.includes('manager')) setUserRole('MANAGER');
     else setUserRole('EMPLOYEE');
@@ -224,7 +226,6 @@ export default function DashboardPage() {
         const data = await resp.json();
         setStats(data);
       } else {
-        // Fallback demo stats
         setStats({ employees: 12, pending_leaves: 2, pending_expenses: 3 });
       }
     } catch {
@@ -244,7 +245,6 @@ export default function DashboardPage() {
           return;
         }
       }
-      // Fallback pre-populated employees if empty
       setEmployees([
         { id: 1, full_name: 'Admin User', designation: 'System Administrator', department: 'OPERATIONS', employee_code: 'ADM001', is_active: true },
         { id: 2, full_name: 'Jane Manager', designation: 'Engineering Manager', department: 'ENGINEERING', employee_code: 'MGR001', is_active: true },
@@ -359,39 +359,41 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen cyber-bg flex flex-col selection:bg-cyan-500/20 text-slate-100">
-      {/* Top Command Bar */}
-      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070a12]/85 backdrop-blur-xl">
+    <div className="min-h-screen tactical-matrix-bg flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300 text-slate-100">
+      {/* Top Tactical Command HUD Header */}
+      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#030712]/90 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 p-0.5 shadow-md shadow-cyan-500/20">
-                <div className="w-full h-full bg-[#090d16] rounded-[10px] flex items-center justify-center">
-                  <ShieldCheck className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 via-cyan-500 to-indigo-600 p-0.5 shadow-md shadow-emerald-500/20">
+                <div className="w-full h-full bg-[#030712] rounded-[10px] flex items-center justify-center">
+                  <ShieldCheck className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
                 </div>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-base tracking-tight text-white">
-                    NovaPay ERP
+                  <span className="font-extrabold text-base tracking-wider text-white">
+                    ACTIONGATE
                   </span>
-                  <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
-                    GATEWAY
+                  <span className="text-slate-500">×</span>
+                  <span className="text-xs font-semibold text-slate-300">NovaPay</span>
+                  <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                    HUD
                   </span>
                 </div>
               </div>
             </Link>
 
-            <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-white/5 text-[11px] font-mono text-slate-300 ml-4">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-white/10 text-[11px] font-mono text-slate-300 ml-4">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>ACTIONGATE: ZERO-TRUST LATTICE ACTIVE</span>
+              <span>LATTICE INVARIANTS: P1-P7 ENFORCING</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* User Profile Pill */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-white/10 font-mono text-xs">
-              <div className="w-2 h-2 rounded-full bg-cyan-400" />
+          <div className="flex items-center gap-3">
+            {/* Operator Badge */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 font-mono text-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
               <span className="text-slate-300 hidden sm:inline">{userEmail}</span>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                 {userRole}
@@ -401,7 +403,7 @@ export default function DashboardPage() {
             <button
               onClick={handleLogout}
               className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition flex items-center gap-1.5 text-xs font-mono"
-              title="Sign Out"
+              title="Terminate Session"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Logout</span>
@@ -410,107 +412,107 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Main Container */}
+      {/* Main HUD Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
-        {/* KPI Stats Row */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="glass-card glass-card-hover rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
-              <span>ACTIVE WORKFORCE</span>
-              <Users className="w-4 h-4 text-cyan-400" />
+        {/* Tactical Metric HUD Row */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+          <div className="hud-card hud-card-hover rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+            <div className="flex items-center justify-between text-slate-400 text-xs">
+              <span>WORKFORCE ENCLAVE</span>
+              <Users className="w-4 h-4 text-emerald-400" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-3xl font-extrabold text-white font-mono">
+              <span className="text-3xl font-black text-white">
                 {stats?.employees ?? 12}
               </span>
-              <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-0.5">
-                <TrendingUp className="w-3 h-3" /> Live Synced
+              <span className="text-[11px] text-emerald-400 flex items-center gap-0.5">
+                <TrendingUp className="w-3 h-3" /> Live SQLite
               </span>
             </div>
-            <span className="text-[11px] text-slate-500 mt-1">Departments: Eng, Ops, Fin</span>
+            <span className="text-[11px] text-slate-500 mt-1">Verified Personnel Records</span>
           </div>
 
-          <div className="glass-card glass-card-hover rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
+          <div className="hud-card hud-card-hover rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+            <div className="flex items-center justify-between text-slate-400 text-xs">
               <span>PENDING LEAVES</span>
               <Calendar className="w-4 h-4 text-amber-400" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-3xl font-extrabold text-amber-400 font-mono">
+              <span className="text-3xl font-black text-amber-400">
                 {stats?.pending_leaves ?? 2}
               </span>
-              <span className="text-[11px] font-mono text-amber-300">
-                Action Required
+              <span className="text-[11px] text-amber-300">
+                Awaiting Sign-off
               </span>
             </div>
-            <span className="text-[11px] text-slate-500 mt-1">Awaiting Manager Sign-off</span>
+            <span className="text-[11px] text-slate-500 mt-1">Manager Discretion Queue</span>
           </div>
 
-          <div className="glass-card glass-card-hover rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
-              <span>PENDING EXPENSES</span>
-              <CreditCard className="w-4 h-4 text-indigo-400" />
+          <div className="hud-card hud-card-hover rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+            <div className="flex items-center justify-between text-slate-400 text-xs">
+              <span>EXPENSE DUAL-KEY</span>
+              <CreditCard className="w-4 h-4 text-cyan-400" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-3xl font-extrabold text-indigo-300 font-mono">
+              <span className="text-3xl font-black text-cyan-300">
                 {stats?.pending_expenses ?? 3}
               </span>
-              <span className="text-[11px] font-mono text-indigo-300">
-                Dual-Key Protected
+              <span className="text-[11px] text-cyan-300">
+                Policy Intercepted
               </span>
             </div>
-            <span className="text-[11px] text-slate-500 mt-1">&gt; ₹10k auto-held by ActionGate</span>
+            <span className="text-[11px] text-slate-500 mt-1">&gt; ₹10k Threshold Enforced</span>
           </div>
 
-          <div className="glass-card glass-card-hover rounded-2xl p-5 border border-cyan-500/20 shadow-lg shadow-cyan-500/5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-cyan-400 text-xs font-mono">
-              <span>ACTIONGATE HEALTH</span>
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+          <div className="hud-card hud-card-hover rounded-2xl p-5 border border-emerald-500/30 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div className="flex items-center justify-between text-emerald-400 text-xs">
+              <span>GATEWAY INVIOLABILITY</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
             </div>
             <div className="mt-3 flex items-baseline justify-between">
-              <span className="text-3xl font-extrabold text-cyan-400 font-mono">
+              <span className="text-3xl font-black text-emerald-400">
                 100%
               </span>
-              <span className="text-[11px] font-mono text-emerald-400">
-                P1-P7 Verified
+              <span className="text-[11px] text-emerald-400">
+                Formal Meet ∧
               </span>
             </div>
-            <span className="text-[11px] text-slate-500 mt-1">122 Attacks Blocked · 0 Leaks</span>
+            <span className="text-[11px] text-slate-500 mt-1">122 Attack Proofs Sealed</span>
           </div>
         </section>
 
-        {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-white/10 pb-2 overflow-x-auto">
+        {/* Tab Selector Navigation */}
+        <div className="flex items-center gap-2 border-b border-white/10 pb-2 overflow-x-auto font-mono text-xs">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2 ${
               activeTab === 'overview'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900/40'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>3D Engine & Overview</span>
+            <span>3D Defense Core & Telemetry</span>
           </button>
 
           <button
             onClick={() => setActiveTab('employees')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2 ${
               activeTab === 'employees'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900/40'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
-            <span>Employees ({employees.length})</span>
+            <span>Operatives Directory ({employees.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('leaves')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2 ${
               activeTab === 'leaves'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900/40'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />
@@ -519,10 +521,10 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab('expenses')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2 ${
               activeTab === 'expenses'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900/40'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
             }`}
           >
             <CreditCard className="w-3.5 h-3.5" />
@@ -531,82 +533,82 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab('interceptor')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2 ${
               activeTab === 'interceptor'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900/40'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
             }`}
           >
             <Terminal className="w-3.5 h-3.5" />
-            <span>ActionGate Interceptor Stream</span>
+            <span>ActionGate Threat Stream</span>
           </button>
         </div>
 
-        {/* Tab 1: 3D Engine & Overview */}
+        {/* Tab 1: 3D Core & Overview */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* Left Spline 3D Interactive Container */}
-            <div className="lg:col-span-7 glass-card rounded-3xl p-6 border border-white/10 flex flex-col justify-between relative overflow-hidden">
-              <div className="flex items-center justify-between z-10">
+            {/* Spline 3D Scene Viewport */}
+            <div className="lg:col-span-7 tactical-bracket hud-card rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden">
+              <div className="flex items-center justify-between z-10 font-mono">
                 <div>
                   <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-cyan-400" />
+                    <Radio className="w-4 h-4 text-emerald-400 animate-pulse" />
                     <h2 className="text-lg font-bold text-white tracking-tight">
-                      3D Autonomous Action Gatekeeper
+                      3D Holographic Action Citadel
                     </h2>
                   </div>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Interactive Spline 3D Security Mesh · Drag to rotate & inspect
+                    Interactive Spline 3D Security Mesh · Drag to rotate, inspect filaments
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono">
-                  LIVE INTERACTIVE
+                <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-[10px]">
+                  LIVE 3D ACTIVE
                 </span>
               </div>
 
-              <div className="w-full h-[360px] sm:h-[400px] my-3 rounded-2xl bg-slate-950/70 border border-white/5 relative overflow-hidden">
+              <div className="w-full h-[360px] sm:h-[400px] my-3 rounded-2xl bg-[#030814]/90 border border-white/5 relative overflow-hidden">
                 <SplineScene />
               </div>
 
               <div className="grid grid-cols-3 gap-3 font-mono text-xs border-t border-white/10 pt-4">
-                <div className="p-2.5 rounded-xl bg-slate-900/50 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">CURRENT PATH</div>
-                  <div className="text-cyan-400 font-bold mt-0.5">Dual-Gate Meet</div>
+                <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                  <div className="text-slate-400 text-[10px]">POLICY PATH</div>
+                  <div className="text-emerald-400 font-bold mt-0.5">meet(base, ai)</div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-900/50 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">AUDIT INTEGRITY</div>
-                  <div className="text-emerald-400 font-bold mt-0.5">SHA256 Chained</div>
+                <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                  <div className="text-slate-400 text-[10px]">AUDIT TAMPER-PROOF</div>
+                  <div className="text-cyan-400 font-bold mt-0.5">Chained HMAC</div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-900/50 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">NONCE PROTECTION</div>
-                  <div className="text-indigo-400 font-bold mt-0.5">Replay-Proof</div>
+                <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                  <div className="text-slate-400 text-[10px]">REPLAY DEFENSE</div>
+                  <div className="text-indigo-400 font-bold mt-0.5">One-Time Nonce</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Side: Quick Operations & Recent Action Interceptions */}
+            {/* Quick Actions & Live Stream */}
             <div className="lg:col-span-5 flex flex-col gap-6">
-              {/* Quick Action Trigger Box */}
-              <div className="glass-card rounded-3xl p-6 border border-white/10 flex flex-col gap-4">
-                <h3 className="text-sm font-bold font-mono text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-cyan-400" />
-                  <span>ERP Quick Actions</span>
+              {/* Tactical Quick Action Box */}
+              <div className="hud-card rounded-3xl p-6 border border-white/10 flex flex-col gap-4 font-mono">
+                <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-emerald-400" />
+                  <span>Immediate Operative Triggers</span>
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 text-xs">
                   <button
                     onClick={() => {
                       setActiveTab('employees');
                       setIsAddEmpModalOpen(true);
                     }}
-                    className="p-3 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium transition flex items-center justify-between"
+                    className="p-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-semibold transition flex items-center justify-between"
                   >
-                    <span>+ New Employee</span>
+                    <span>+ New Operative</span>
                     <Plus className="w-4 h-4" />
                   </button>
 
                   <button
                     onClick={() => setActiveTab('leaves')}
-                    className="p-3 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-medium transition flex items-center justify-between"
+                    className="p-3 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 font-semibold transition flex items-center justify-between"
                   >
                     <span>Review Leaves</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -614,43 +616,43 @@ export default function DashboardPage() {
 
                   <button
                     onClick={() => setActiveTab('expenses')}
-                    className="p-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-mono font-medium transition flex items-center justify-between"
+                    className="p-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-semibold transition flex items-center justify-between"
                   >
-                    <span>Review Expenses</span>
+                    <span>Dual-Key Claims</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </button>
 
                   <button
                     onClick={() => setActiveTab('interceptor')}
-                    className="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-200 text-xs font-mono font-medium transition flex items-center justify-between"
+                    className="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-200 font-semibold transition flex items-center justify-between"
                   >
-                    <span>Audit Feed</span>
-                    <Terminal className="w-4 h-4 text-cyan-400" />
+                    <span>Threat Feed</span>
+                    <Terminal className="w-4 h-4 text-emerald-400" />
                   </button>
                 </div>
               </div>
 
-              {/* Live Interceptor Mini-Feed */}
-              <div className="glass-card rounded-3xl p-6 border border-white/10 flex-1 flex flex-col justify-between">
+              {/* Mini Stream */}
+              <div className="hud-card rounded-3xl p-6 border border-white/10 flex-1 flex flex-col justify-between font-mono">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold font-mono text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                      <Terminal className="w-4 h-4 text-cyan-400" />
-                      <span>Recent Interceptions</span>
+                    <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                      <Terminal className="w-4 h-4 text-emerald-400" />
+                      <span>Live Interceptor Telemetry</span>
                     </h3>
-                    <span className="text-[10px] font-mono text-slate-500">Live Stream</span>
+                    <span className="text-[10px] text-slate-500">Sub-millisecond</span>
                   </div>
 
-                  <div className="space-y-3 font-mono text-xs">
+                  <div className="space-y-2.5 text-xs">
                     {interceptorLogs.slice(0, 3).map((item) => (
                       <div
                         key={item.id}
-                        className="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center justify-between"
+                        className="p-3 rounded-xl bg-slate-950/70 border border-white/5 flex items-center justify-between"
                       >
                         <div className="flex flex-col gap-0.5">
                           <div className="flex items-center gap-2">
                             <span className="font-semibold text-slate-200">{item.action}</span>
-                            <span className="text-[10px] text-slate-500">{item.agent}</span>
+                            <span className="text-[10px] text-slate-500">({item.agent})</span>
                           </div>
                           <span className="text-[11px] text-slate-400">{item.payload}</span>
                         </div>
@@ -670,9 +672,9 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400 font-mono">
-                  <span>FastAPI + SQLite Active</span>
-                  <Link href="http://127.0.0.1:8000/docs" target="_blank" className="text-cyan-400 hover:underline flex items-center gap-1">
+                <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+                  <span>FastAPI ERP Core</span>
+                  <Link href="http://127.0.0.1:8000/docs" target="_blank" className="text-emerald-400 hover:underline flex items-center gap-1">
                     API Docs <ArrowUpRight className="w-3 h-3" />
                   </Link>
                 </div>
@@ -681,17 +683,17 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Tab 2: Employees Directory */}
+        {/* Tab 2: Operatives Directory */}
         {activeTab === 'employees' && (
-          <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6">
+          <div className="hud-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6 font-mono">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                  <Users className="w-5 h-5 text-cyan-400" />
-                  <span>Employee Roster</span>
+                  <Users className="w-5 h-5 text-emerald-400" />
+                  <span>Personnel & Agent Directory</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Manage organization personnel, department assignments, and security roles.
+                <p className="text-xs text-slate-400 mt-1 font-sans">
+                  Active organizational personnel, department security contexts, and RBAC clearances.
                 </p>
               </div>
 
@@ -702,39 +704,39 @@ export default function DashboardPage() {
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search employee..."
-                    className="pl-9 pr-4 py-1.5 rounded-xl bg-slate-900/80 border border-white/10 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                    placeholder="Search personnel..."
+                    className="pl-9 pr-4 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
                   />
                 </div>
                 <button
                   onClick={() => setIsAddEmpModalOpen(true)}
-                  className="px-3.5 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-bold text-xs flex items-center gap-1.5 transition"
+                  className="px-4 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition shadow-md"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Add Employee</span>
+                  <span>Add Operative</span>
                 </button>
               </div>
             </div>
 
-            {/* Employee Table */}
+            {/* Table */}
             <div className="overflow-x-auto rounded-2xl border border-white/10">
-              <table className="w-full text-left font-mono text-xs">
-                <thead className="bg-slate-950/80 border-b border-white/10 text-slate-400 uppercase tracking-wider text-[10px]">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-950/90 border-b border-white/10 text-slate-400 uppercase tracking-wider text-[10px]">
                   <tr>
-                    <th className="p-3.5">Code</th>
-                    <th className="p-3.5">Full Name</th>
+                    <th className="p-3.5">Security Code</th>
+                    <th className="p-3.5">Operative Name</th>
                     <th className="p-3.5">Department</th>
-                    <th className="p-3.5">Designation</th>
+                    <th className="p-3.5">Role Designation</th>
                     <th className="p-3.5">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 bg-slate-900/30">
+                <tbody className="divide-y divide-white/5 bg-slate-900/40">
                   {filteredEmployees.map((emp) => (
                     <tr key={emp.id} className="hover:bg-slate-800/40 transition">
-                      <td className="p-3.5 text-cyan-400 font-semibold">{emp.employee_code}</td>
-                      <td className="p-3.5 text-slate-200 font-medium">{emp.full_name}</td>
+                      <td className="p-3.5 text-emerald-400 font-bold">{emp.employee_code}</td>
+                      <td className="p-3.5 text-slate-200 font-semibold">{emp.full_name}</td>
                       <td className="p-3.5">
-                        <span className="px-2 py-0.5 rounded bg-slate-800 border border-white/10 text-[10px] text-slate-300">
+                        <span className="px-2 py-0.5 rounded bg-slate-800 border border-white/10 text-[10px] text-slate-300 font-mono">
                           {emp.department}
                         </span>
                       </td>
@@ -742,7 +744,7 @@ export default function DashboardPage() {
                       <td className="p-3.5">
                         <span className="inline-flex items-center gap-1 text-emerald-400 text-[11px]">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                          Active
+                          Authorized
                         </span>
                       </td>
                     </tr>
@@ -753,17 +755,17 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Tab 3: Leave Requests */}
+        {/* Tab 3: Leaves */}
         {activeTab === 'leaves' && (
-          <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="hud-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono">
               <div>
                 <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-amber-400" />
-                  <span>Leave Authorization Center</span>
+                  <span>Time-Off Governance Queue</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Manager & Admin review portal for employee time-off requests.
+                <p className="text-xs text-slate-400 mt-1 font-sans">
+                  Dual-approval leave queue for managers and enterprise administrators.
                 </p>
               </div>
             </div>
@@ -772,15 +774,15 @@ export default function DashboardPage() {
               {leaves.map((leave) => (
                 <div
                   key={leave.id}
-                  className="p-5 rounded-2xl bg-slate-950/60 border border-white/10 flex flex-col justify-between gap-4"
+                  className="p-5 rounded-2xl bg-slate-950/70 border border-white/10 flex flex-col justify-between gap-4"
                 >
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 font-mono text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-cyan-400 font-semibold">
+                      <span className="text-emerald-400 font-bold">
                         {leave.employee_name}
                       </span>
                       <span
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+                        className={`text-[10px] px-2 py-0.5 rounded border ${
                           leave.status === 'APPROVED'
                             ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
                             : leave.status === 'REJECTED'
@@ -792,26 +794,26 @@ export default function DashboardPage() {
                       </span>
                     </div>
 
-                    <div className="text-xs text-slate-300">
-                      <strong>Type:</strong> {leave.leave_type} · <strong>Duration:</strong> {leave.days} days
+                    <div className="text-slate-300">
+                      <strong>Category:</strong> {leave.leave_type} · <strong>Duration:</strong> {leave.days} days
                     </div>
-                    <div className="text-xs text-slate-400">
-                      <strong>Dates:</strong> {leave.start_date} to {leave.end_date}
+                    <div className="text-slate-400">
+                      <strong>Schedule:</strong> {leave.start_date} → {leave.end_date}
                     </div>
-                    <p className="text-xs text-slate-500 italic mt-1">&quot;{leave.reason}&quot;</p>
+                    <p className="text-slate-400 italic mt-1 font-sans">&quot;{leave.reason}&quot;</p>
                   </div>
 
                   {leave.status === 'PENDING' && (
                     <div className="flex items-center gap-2 pt-3 border-t border-white/5 font-mono text-xs">
                       <button
                         onClick={() => handleReviewLeave(leave.id, 'APPROVED')}
-                        className="flex-1 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-semibold flex items-center justify-center gap-1 transition"
+                        className="flex-1 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold flex items-center justify-center gap-1 transition"
                       >
                         <Check className="w-3.5 h-3.5" /> Approve
                       </button>
                       <button
                         onClick={() => handleReviewLeave(leave.id, 'REJECTED')}
-                        className="flex-1 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-semibold flex items-center justify-center gap-1 transition"
+                        className="flex-1 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-bold flex items-center justify-center gap-1 transition"
                       >
                         <X className="w-3.5 h-3.5" /> Reject
                       </button>
@@ -823,17 +825,17 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Tab 4: Expense Claims */}
+        {/* Tab 4: Expenses */}
         {activeTab === 'expenses' && (
-          <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="hud-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono">
               <div>
                 <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-indigo-400" />
-                  <span>Expense Authorization & Policy Dual-Gate</span>
+                  <CreditCard className="w-5 h-5 text-cyan-400" />
+                  <span>Financial Expense Dual-Key Gate</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Expenses &gt; ₹10,000 trigger ActionGate policy hold for dual-key manager validation.
+                <p className="text-xs text-slate-400 mt-1 font-sans">
+                  ActionGate Policy Invariant: Any expense &gt; ₹10,000 is intercepted and locked for Dual-Key authorization.
                 </p>
               </div>
             </div>
@@ -842,15 +844,15 @@ export default function DashboardPage() {
               {expenses.map((exp) => (
                 <div
                   key={exp.id}
-                  className="p-5 rounded-2xl bg-slate-950/60 border border-white/10 flex flex-col justify-between gap-4"
+                  className="p-5 rounded-2xl bg-slate-950/70 border border-white/10 flex flex-col justify-between gap-4"
                 >
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-cyan-400 font-semibold">
+                  <div className="flex flex-col gap-2 font-mono">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-emerald-400 font-bold">
                         {exp.employee_name}
                       </span>
                       <span
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+                        className={`text-[10px] px-2 py-0.5 rounded border ${
                           exp.status === 'APPROVED'
                             ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
                             : exp.status === 'REJECTED'
@@ -862,19 +864,19 @@ export default function DashboardPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-2xl font-bold font-mono text-white">
+                    <div className="flex items-baseline justify-between mt-1">
+                      <span className="text-2xl font-black text-white">
                         ₹{exp.amount.toLocaleString('en-IN')}
                       </span>
-                      <span className="text-xs font-mono text-slate-400">{exp.category}</span>
+                      <span className="text-xs text-slate-400">{exp.category}</span>
                     </div>
 
-                    <p className="text-xs text-slate-400 mt-1">{exp.description}</p>
+                    <p className="text-xs text-slate-400 mt-1 font-sans">{exp.description}</p>
 
                     {exp.requires_dual_key && (
-                      <div className="mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-300 flex items-center gap-1.5">
+                      <div className="mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-300 flex items-center gap-1.5">
                         <Lock className="w-3 h-3 text-amber-400" />
-                        <span>ActionGate Hold: High Value Policy Rule</span>
+                        <span>ActionGate Intercept: Dual-Key Policy Triggered</span>
                       </div>
                     )}
                   </div>
@@ -883,13 +885,13 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2 pt-3 border-t border-white/5 font-mono text-xs">
                       <button
                         onClick={() => handleReviewExpense(exp.id, 'APPROVED')}
-                        className="flex-1 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-semibold flex items-center justify-center gap-1 transition"
+                        className="flex-1 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold flex items-center justify-center gap-1 transition"
                       >
                         <Check className="w-3.5 h-3.5" /> Approve
                       </button>
                       <button
                         onClick={() => handleReviewExpense(exp.id, 'REJECTED')}
-                        className="flex-1 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-semibold flex items-center justify-center gap-1 transition"
+                        className="flex-1 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-bold flex items-center justify-center gap-1 transition"
                       >
                         <X className="w-3.5 h-3.5" /> Reject
                       </button>
@@ -901,30 +903,30 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Tab 5: ActionGate Interceptor Stream & Invariants */}
+        {/* Tab 5: Interceptor Stream */}
         {activeTab === 'interceptor' && (
-          <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6">
+          <div className="hud-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col gap-6 font-mono">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                  <Terminal className="w-5 h-5 text-cyan-400" />
+                  <Terminal className="w-5 h-5 text-emerald-400" />
                   <span>ActionGate Real-Time Event Stream</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1 font-sans">
                   Live audit trail of autonomous agent tool requests evaluated across formal lattice invariants.
                 </p>
               </div>
 
-              <div className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-xs font-mono text-cyan-300">
+              <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300">
                 122 ATTACK VECTORS SEALED
               </div>
             </div>
 
-            <div className="space-y-3 font-mono text-xs">
+            <div className="space-y-3 text-xs">
               {interceptorLogs.map((log) => (
                 <div
                   key={log.id}
-                  className="p-4 rounded-2xl bg-slate-950/70 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-cyan-500/30 transition"
+                  className="p-4 rounded-2xl bg-slate-950/80 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-emerald-500/30 transition"
                 >
                   <div className="flex items-start sm:items-center gap-3">
                     <span
@@ -958,14 +960,14 @@ export default function DashboardPage() {
         )}
       </main>
 
-      {/* Add Employee Modal */}
+      {/* Add Operative Modal */}
       {isAddEmpModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="glass-card rounded-3xl p-6 sm:p-8 max-w-md w-full border border-cyan-500/30 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="hud-card rounded-3xl p-6 sm:p-8 max-w-md w-full border border-emerald-500/30 shadow-2xl relative font-mono">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-white font-mono flex items-center gap-2">
-                <Plus className="w-5 h-5 text-cyan-400" />
-                <span>Add Employee Profile</span>
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Plus className="w-5 h-5 text-emerald-400" />
+                <span>Register Operative Profile</span>
               </h3>
               <button
                 onClick={() => setIsAddEmpModalOpen(false)}
@@ -975,10 +977,10 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateEmployee} className="space-y-4 font-mono text-xs">
+            <form onSubmit={handleCreateEmployee} className="space-y-4 text-xs">
               <div>
                 <label className="block text-slate-300 uppercase tracking-wider mb-1">
-                  Full Name
+                  Full Legal / Security Name
                 </label>
                 <input
                   type="text"
@@ -986,18 +988,18 @@ export default function DashboardPage() {
                   value={newEmpName}
                   onChange={(e) => setNewEmpName(e.target.value)}
                   placeholder="e.g. Vikram Malhotra"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div>
                 <label className="block text-slate-300 uppercase tracking-wider mb-1">
-                  Department
+                  Security Department
                 </label>
                 <select
                   value={newEmpDept}
                   onChange={(e) => setNewEmpDept(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-emerald-400"
                 >
                   <option value="ENGINEERING">ENGINEERING</option>
                   <option value="OPERATIONS">OPERATIONS</option>
@@ -1009,23 +1011,23 @@ export default function DashboardPage() {
 
               <div>
                 <label className="block text-slate-300 uppercase tracking-wider mb-1">
-                  Designation
+                  Designation / Role
                 </label>
                 <input
                   type="text"
                   value={newEmpDesignation}
                   onChange={(e) => setNewEmpDesignation(e.target.value)}
-                  placeholder="e.g. Senior Backend Engineer"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-cyan-400"
+                  placeholder="e.g. Lead Zero-Trust Architect"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div className="pt-2 flex items-center gap-3">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold transition"
+                  className="flex-1 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold transition shadow-md"
                 >
-                  Save & Register
+                  Register Profile
                 </button>
                 <button
                   type="button"
@@ -1041,8 +1043,8 @@ export default function DashboardPage() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-[#070a12] py-6 text-center text-xs text-slate-500 font-mono mt-auto">
-        <p>NovaPay ERP · ActionGate Zero-Trust Action Authorization · All Systems Nominal</p>
+      <footer className="border-t border-white/10 bg-[#030712] py-6 text-center text-xs text-slate-500 font-mono mt-auto">
+        <p>ActionGate × NovaPay ERP · Autonomous Agent Action Firewall · All Operations Nominal</p>
       </footer>
     </div>
   );

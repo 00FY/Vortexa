@@ -1,88 +1,114 @@
 @import "tailwindcss";
 
-:root {
-  --background: #06080e;
-  --foreground: #f1f5f9;
-  --primary: #00f0ff;
-  --secondary: #7928ca;
-  --accent: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --border: rgba(255, 255, 255, 0.08);
-  --card-bg: rgba(13, 17, 28, 0.75);
+@layer base {
+  :root {
+    --font-sans: var(--font-outfit), system-ui, -apple-system, sans-serif;
+    --font-mono: var(--font-mono), monospace;
+  }
 }
 
 body {
-  background: #06080e;
-  color: #f1f5f9;
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  background-color: #030712;
+  color: #f3f4f6;
+  font-family: var(--font-outfit), system-ui, sans-serif;
   overflow-x: hidden;
   overflow-y: auto !important;
 }
 
-/* Custom Cyber Utilities */
-.cyber-bg {
-  background-color: #06080e;
+/* Tactical Obsidian Matrix Background */
+.tactical-matrix-bg {
+  background-color: #030712;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(0, 240, 255, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(121, 40, 202, 0.12) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.06) 0px, transparent 50%),
+    radial-gradient(at 15% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 45%),
+    radial-gradient(at 85% 10%, rgba(6, 182, 212, 0.10) 0px, transparent 45%),
+    radial-gradient(at 50% 85%, rgba(139, 92, 246, 0.07) 0px, transparent 50%),
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
 }
 
-.glass-card {
-  background: rgba(13, 18, 30, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* Glassmorphic Obsidian HUD Panels */
+.hud-card {
+  background: rgba(8, 14, 28, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.glass-card-hover {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.hud-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card-hover:hover {
+.hud-card-hover:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 240, 255, 0.25);
-  box-shadow: 0 12px 40px 0 rgba(0, 240, 255, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 16px 48px -8px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(16, 185, 129, 0.2);
 }
 
-.neon-border {
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+/* Tactical Corner Brackets */
+.tactical-bracket {
+  position: relative;
+}
+.tactical-bracket::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #10b981;
+  border-left: 2px solid #10b981;
+  pointer-events: none;
+}
+.tactical-bracket::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid #10b981;
+  border-right: 2px solid #10b981;
+  pointer-events: none;
 }
 
-.pulse-glow {
-  animation: pulse-glow-anim 3s infinite ease-in-out;
+/* Glowing Neon Borders */
+.glow-emerald {
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2), inset 0 0 10px rgba(16, 185, 129, 0.05);
 }
 
-@keyframes pulse-glow-anim {
-  0%, 100% {
-    box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 24px rgba(0, 240, 255, 0.45);
-  }
+.glow-cyan {
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2), inset 0 0 10px rgba(6, 182, 212, 0.05);
+}
+
+/* Radar & Pulse Animations */
+@keyframes radar-scan {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-radar {
+  animation: radar-scan 6s linear infinite;
 }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0e17;
+  background: #030712;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 3px;
+  background: #1f2937;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00f0ff;
+  background: #10b981;
 }
