@@ -8,7 +8,11 @@ from core.database import get_db
 from core.security import hash_password, verify_password, create_access_token, decode_access_token
 from schemas.auth import LoginRequest
 
-client = TestClient(app)
+
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
 
 def test_hash_and_verify_real():
@@ -23,7 +27,7 @@ def test_jwt_create_decode_real():
     assert payload and payload.get("sub") == "u1"
 
 
-def test_login_sets_cookie_and_no_token_in_body():
+def test_login_sets_cookie_and_no_token_in_body(client):
     mock_session = MagicMock()
     mock_user = MagicMock()
     mock_user.email = "test@novapay.com"
@@ -44,7 +48,7 @@ def test_login_sets_cookie_and_no_token_in_body():
         app.dependency_overrides.clear()
 
 
-def test_invalid_password_401():
+def test_invalid_password_401(client):
     mock_session = MagicMock()
     mock_user = MagicMock()
     mock_user.email = "bad@novapay.com"
@@ -59,7 +63,7 @@ def test_invalid_password_401():
         app.dependency_overrides.clear()
 
 
-def test_unknown_email_401():
+def test_unknown_email_401(client):
     mock_session = MagicMock()
     mock_session.query.return_value.filter.return_value.first.return_value = None
 
@@ -71,7 +75,7 @@ def test_unknown_email_401():
         app.dependency_overrides.clear()
 
 
-def test_me_authenticated_profile():
+def test_me_authenticated_profile(client):
     test_id = uuid.UUID("11111111-1111-1111-1111-111111111111")
     token = create_access_token({"sub": str(test_id)})
     mock_session = MagicMock()
@@ -92,17 +96,17 @@ def test_me_authenticated_profile():
         app.dependency_overrides.clear()
 
 
-def test_me_missing_cookie_401():
+def test_me_missing_cookie_401(client):
     resp = client.get("/api/auth/me")
     assert resp.status_code == 401
 
 
-def test_invalid_expired_jwt_401():
+def test_invalid_expired_jwt_401(client):
     resp = client.get("/api/auth/me", cookies={"access_token": "badtoken"})
     assert resp.status_code == 401
 
 
-def test_inactive_user_401():
+def test_inactive_user_401(client):
     test_id = uuid.UUID("22222222-2222-2222-2222-222222222222")
     token = create_access_token({"sub": str(test_id)})
     mock_session = MagicMock()
@@ -119,7 +123,7 @@ def test_inactive_user_401():
         app.dependency_overrides.clear()
 
 
-def test_logout_clears_cookie():
+def test_logout_clears_cookie(client):
     resp = client.post("/api/auth/logout")
     assert resp.status_code == 200
     assert "access_token" not in resp.cookies or resp.cookies.get("access_token") == ""
