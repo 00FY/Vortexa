@@ -2,9 +2,9 @@ name: ActionGate CI Pipeline
 
 on:
   push:
-    branches: [ main, master, feature/** ]
+    branches: [main, master, 'feature/**']
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   test-orchestration:
@@ -19,13 +19,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-          cache: "pip"
 
-      - name: Install dependencies
+      - name: Install orchestration dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
-          pip install pytest pytest-asyncio pydantic pydantic-settings httpx fastapi uvicorn langgraph langchain-core langchain-openai
+          python -m pip install pytest pytest-asyncio pydantic pydantic-settings httpx fastapi uvicorn langgraph langchain-core langchain-openai
 
       - name: Run Orchestrator & E2E Security Tests
         env:
